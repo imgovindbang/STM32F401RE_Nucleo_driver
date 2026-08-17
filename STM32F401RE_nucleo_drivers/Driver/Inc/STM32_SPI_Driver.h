@@ -16,10 +16,23 @@ typedef struct
 	uint8_t SPI_Speed;
 }SPI_Config_t;
 
+
+typedef struct
+{
+	uint8_t *pTxBuffer;					/*	< To Store the TxBuffer	>	*/
+	uint8_t *pRxBuffer;					/*	< To Store the RxBuffer	>	*/
+	uint8_t TxLen;						/*	< To Store the TxBuffer Length	>	*/
+	uint8_t Rxlen;						/*	< To Store the RxBuffer	Length  >	*/
+	uint8_t TxState;					/*	< To Store the TxBuffer State 	>	*/
+	uint8_t RxState;					/*	< To Store the RxBuffer	State   >	*/
+}SPI_Store_Data_t;
+
+
 typedef struct
 {
 	SPI_RegDef_t *pSPIx;
 	SPI_Config_t SPI_Config;
+	SPI_Store_Data_t *SPI_Data_Store;
 }SPI_Handle_t;
 
 
@@ -151,6 +164,8 @@ typedef enum
 }SPI_SR_Bits;
 
 
+
+
 /* SPI Status Register Macros */
 
 #define SPI_TXE_FLAG		(1 << SPI_SR_TXE)
@@ -165,10 +180,24 @@ typedef enum
 
 
 
+// @SPI State macros
+
+#define SPI_READY			 0
+#define SPI_BUSY_IN_TX   	 1
+#define SPI_BUSY_IN_RX   	 2
 
 
 
 
+/* @SPI Application Possible Events */
+
+typedef enum
+{
+	SPI_EVENT_TX_COMP = 1,
+	SPI_EVENT_RX_COMP,
+	SPI_EVENT_OVR_ERR,
+	SPI_EVENT_CRC_ERR
+}SPI_Appl_Event;
 
 
 
@@ -194,14 +223,28 @@ void SPI_Data_Send(SPI_RegDef_t *pSPIx, uint8_t *TxBuffer  ,uint32_t Size);
 
 void SPI_Data_Received(SPI_RegDef_t *pSPIx, uint8_t *RxBuffer  ,uint32_t Size);
 
+/* Data Send and Received in Interrupt */
+
+uint8_t SPI_Data_SendIntr(SPI_Handle_t *SPI_Handle ,uint8_t *TxBuffer  ,uint32_t Size);
+
+uint8_t SPI_Data_ReceivedIntr(SPI_Handle_t *SPI_Handle, uint8_t *RxBuffer  ,uint32_t Size);
+
 /* SPI Interrupt Handle	*/
 
 void SPI_IRQIntr_Config(uint16_t IRQnumber, uint8_t ENorDI);
 void SPI_IRQPerio_Config(uint16_t IRQnumber,uint32_t IRQpriority);
 void SPI_IRQHandle(SPI_Handle_t *pHandle);
 
+void SPI_PeriContr(SPI_RegDef_t *pSPIx, uint8_t ENorDI);
+void SPI_SSIEn(SPI_RegDef_t *pSPIx, uint8_t ENorDI);
 
 
+void SPI_Clr_OVRF(SPI_RegDef_t *pSPIx);
+void SPI_Close_Transmit(SPI_Handle_t *pHandle);
+void SPI_Close_reception(SPI_Handle_t *pHandle);
+
+
+void SPI_Appli_Event_CB(SPI_Handle_t *SPI_Handle, uint8_t SPI_EVENT_RX_COMP);
 
 
 #endif /* STM32_SPI_DRIVER_H_ */

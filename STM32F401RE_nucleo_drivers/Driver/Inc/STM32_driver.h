@@ -4,6 +4,8 @@
 
 
 #include<stdint.h>
+#include <stddef.h>
+
 
 /*Addresses for memory*/
 
@@ -16,78 +18,78 @@
 base address of peripherals and buses
  */
 
-#define PERIPH_BASEADDR 			0x40000000U
-#define APB1_BASEADDR				PERIPH_BASEADDR
-#define APB2_BASEADDR 				0x40010000U
-#define AHB1_BASEADDR				0x40020000U
-#define AHB2_BASEADDR				0x50000000U
+#define PERIPH_BASEADDR 			0x40000000U                 		/* Peripheral Base address to access the peripheral */
+#define APB1_BASEADDR				PERIPH_BASEADDR						/* APB1 Bus base address */
+#define APB2_BASEADDR 				0x40010000U							/* APB2 Bus base address */
+#define AHB1_BASEADDR				0x40020000U							/* AHB1 Bus base address */
+#define AHB2_BASEADDR				0x50000000U							/* AHB2 Bus base address */
 
 /*
-Defining each peripheral base address of ABH1 bus
+Defining each peripheral base address of ABH1 bus (0x40020000)
 */
 
-#define GPIOA_BASEADDR 				(AHB1_BASEADDR + 0x0000)
-#define GPIOB_BASEADDR				(AHB1_BASEADDR + 0x0400)
-#define GPIOC_BASEADDR				(AHB1_BASEADDR + 0x0800)
-#define GPIOD_BASEADDR 				(AHB1_BASEADDR + 0x0C00)
-#define GPIOE_BASEADDR				(AHB1_BASEADDR + 0x1000)
-#define GPIOH_BASEADDR				(AHB1_BASEADDR + 0x1C00)
-#define CRC_BASEADDR				(AHB1_BASEADDR + 0x3000)
-#define RCC_BASEADDR 				(AHB1_BASEADDR + 0x3800)
-#define FLASH_INTRREG_BASEADDR 		(AHB1_BASEADDR + 0x3C00)
-#define DMA1_BASEADDR 				(AHB1_BASEADDR + 0x6000)
-#define DMA2_BASEADDR 				(AHB1_BASEADDR + 0x6400)
+#define GPIOA_BASEADDR 				(AHB1_BASEADDR + 0x0000)			/* GPIOA Base address 0x40020000 */
+#define GPIOB_BASEADDR				(AHB1_BASEADDR + 0x0400)			/* GPIOB Base address 0x40020400 */
+#define GPIOC_BASEADDR				(AHB1_BASEADDR + 0x0800)			/* GPIOC Base address 0x40020800 */
+#define GPIOD_BASEADDR 				(AHB1_BASEADDR + 0x0C00)			/* GPIOD Base address 0x40020C00 */
+#define GPIOE_BASEADDR				(AHB1_BASEADDR + 0x1000)			/* GPIOE Base address 0x40021000 */
+#define GPIOH_BASEADDR				(AHB1_BASEADDR + 0x1C00)			/* GPIOH Base address 0x40021C00 */
+#define CRC_BASEADDR				(AHB1_BASEADDR + 0x3000)			/* Cyclic redundancy check Base address 0x40023000 */
+#define RCC_BASEADDR 				(AHB1_BASEADDR + 0x3800)			/* Reset and clock control (RCC) Base address 0x40023800 */
+#define FLASH_INTRREG_BASEADDR 		(AHB1_BASEADDR + 0x3C00)			/* Flash interface register Base address 0x40023C00 */
+#define DMA1_BASEADDR 				(AHB1_BASEADDR + 0x6000)			/* Direct memory access (DMA1) Base address 0x40026000 */
+#define DMA2_BASEADDR 				(AHB1_BASEADDR + 0x6400)			/* Direct memory access (DMA2) Base address 0x40026400 */
 
 
-/*Base addresses of peripherals of bus ABH2*/
+/*Base addresses of peripherals of bus ABH2 (0x50000000)*/
 
-#define USB_OTG_FS_BASEADDR 		(AHB2_BASEADDR + 0x0000)
+#define USB_OTG_FS_BASEADDR 		(AHB2_BASEADDR + 0x0000)			/* Universal Serial Bus (USB) OTG Base address 0x50000000 */
 
-/*Base address of peripherals of bus APB2*/
+/*Base address of peripherals of bus APB2 (0x40010000)*/
 
-#define TIM1_BASEADDR 				(APB2_BASEADDR + 0x0000)
-#define TIM9_BASEADDR 				(APB2_BASEADDR + 0x4000)
-#define TIM10_BASEADDR 				(APB2_BASEADDR + 0x4400)
-#define TIM11_BASEADDR 				(APB2_BASEADDR + 0x4800)
+#define TIM1_BASEADDR 				(APB2_BASEADDR + 0x0000)			/*	TIMER_1 base address  0x40010000 */
+#define TIM9_BASEADDR 				(APB2_BASEADDR + 0x4000)			/*	TIMER_9 base address  0x40014000 */
+#define TIM10_BASEADDR 				(APB2_BASEADDR + 0x4400)			/*	TIMER_10 base address 0x40014400 */
+#define TIM11_BASEADDR 				(APB2_BASEADDR + 0x4800)			/*	TIMER_11 base address 0x40014800 */
 
-#define USART1_BASEADDR 			(APB2_BASEADDR + 0x1000)
-#define USART6_BASEADDR 			(APB2_BASEADDR + 0x1400)
+#define USART1_BASEADDR 			(APB2_BASEADDR + 0x1000)			/*	Universal synchronous asynchronous receiver transmitter (USART1) 0x40011000 */
+#define USART6_BASEADDR 			(APB2_BASEADDR + 0x1400)			/*	Universal synchronous asynchronous receiver transmitter (USART9) 0x40011400 */
 
-#define ADC1_BASEADDR 				(APB2_BASEADDR + 0x2000)
-#define SDIO_BASEADDR 				(APB2_BASEADDR + 0x2C00)
+#define ADC1_BASEADDR 				(APB2_BASEADDR + 0x2000)			/*	Analog-To-Digital converter(ADC1) 0x40012000 */
+#define SDIO_BASEADDR 				(APB2_BASEADDR + 0x2C00)            /*	Secure digital input/output interface (SDIO) 0x40012C00 */
 
-#define SPI1_BASEADDR 				(APB2_BASEADDR + 0x3000)
-#define SPI4_BASEADDR 				(APB2_BASEADDR + 0x3400)
+#define SPI1_BASEADDR 				(APB2_BASEADDR + 0x3000)			/* Serial Peripheral Interface (SPI1) 0x40013000 */
+#define SPI4_BASEADDR 				(APB2_BASEADDR + 0x3400)			/* Serial Peripheral Interface (SPI4) 0x40013400 */
 
-#define SYSCFG_BASEADDR 			(APB2_BASEADDR + 0x3800)
+#define SYSCFG_BASEADDR 			(APB2_BASEADDR + 0x3800)			/* System configuration controller (SYSCFG)    0x40013800*/
 
-#define EXTI_BASEADDR 				(APB2_BASEADDR + 0x3C00)
+#define EXTI_BASEADDR 				(APB2_BASEADDR + 0x3C00)			/* External interrupt/event controller (EXTI)  0x40013C00 */
 
-/*Base address of peripherals of bus APB1*/
+/*Base address of peripherals of bus APB1 (0x4000 0000) */
 
-#define TIM2_BASEADDR 				(APB1_BASEADDR + 0x0000)
-#define TIM3_BASEADDR 				(APB1_BASEADDR + 0x0400)
-#define TIM4_BASEADDR 				(APB1_BASEADDR + 0x0800)
-#define TIM5_BASEADDR 				(APB1_BASEADDR + 0x0C00)
+#define TIM2_BASEADDR 				(APB1_BASEADDR + 0x0000)			/* TIMER_2 base address 0x0x40000000 */
+#define TIM3_BASEADDR 				(APB1_BASEADDR + 0x0400)			/* TIMER_3 base address 0x0x40000400 */
+#define TIM4_BASEADDR 				(APB1_BASEADDR + 0x0800)			/* TIMER_4 base address 0x0x40000800 */
+#define TIM5_BASEADDR 				(APB1_BASEADDR + 0x0C00)			/* TIMER_5 base address 0x0x40000C00 */
 
-#define RTC_BKP_BASEADDR 			(APB1_BASEADDR + 0x2800)
+#define RTC_BKP_BASEADDR 			(APB1_BASEADDR + 0x2800)			/* Real-time clock (RTC) base address 0x0x40002800 */
 
-#define WWDG_BASEADDR 				(APB1_BASEADDR + 0x2C00)
-#define IWDG_BASEADDR 				(APB1_BASEADDR + 0x3000)
+#define WWDG_BASEADDR 				(APB1_BASEADDR + 0x2C00)			/* Window watchdog (WWDG) base address 		0x40002C00 */
+#define IWDG_BASEADDR 				(APB1_BASEADDR + 0x3000)			/* Independent watchdog (IWDG) base address 0x40003000 */
 
-#define I2S2EXT_BASEADDR 			(APB1_BASEADDR + 0x3400)
-#define I2S3EXT_BASEADDR 			(APB1_BASEADDR + 0x4000)
+#define I2S2EXT_BASEADDR 			(APB1_BASEADDR + 0x3400)			/*	I2S2_EXT base address 0x40003400 */
+#define I2S3EXT_BASEADDR 			(APB1_BASEADDR + 0x4000)			/*	I2S3_EXT base address 0x40004000 */
 
-#define SPI2_I2S2_BASEADDR 			(APB1_BASEADDR + 0x3800)
-#define SPI3_I2S3_BASEADDR 			(APB1_BASEADDR + 0x3C00)
+#define SPI2_I2S2_BASEADDR 			(APB1_BASEADDR + 0x3800)			/* Serial Peripheral Interface (SPI2) base address 0x40003800 */
+#define SPI3_I2S3_BASEADDR 			(APB1_BASEADDR + 0x3C00)			/* Serial Peripheral Interface (SPI2) base address 0x40003C00 */
 
-#define USART2_BASEADDR 			(APB1_BASEADDR + 0x4400)
+#define USART2_BASEADDR 			(APB1_BASEADDR + 0x4400)			/* Universal synchronous asynchronous receiver transmitter (USART2) base address 0x40004400 */
 
-#define I2C1_BASEADDR 			    (APB1_BASEADDR + 0x5400)
-#define I2C2_BASEADDR 			    (APB1_BASEADDR + 0x5800)
-#define I2C3_BASEADDR 			    (APB1_BASEADDR + 0x5C00)
+#define I2C1_BASEADDR 			    (APB1_BASEADDR + 0x5400)			/* Inter-integrated circuit (I2C1) interface base address 0x40005400 */
+#define I2C2_BASEADDR 			    (APB1_BASEADDR + 0x5800)			/* Inter-integrated circuit (I2C2) interface base address 0x40005800 */
+#define I2C3_BASEADDR 			    (APB1_BASEADDR + 0x5C00)			/* Inter-integrated circuit (I2C1) interface base address 0x40005C00 */
 
-#define PWR_BASEADDR 			    (APB1_BASEADDR + 0x7000)
+#define PWR_BASEADDR 			    (APB1_BASEADDR + 0x7000)			/* Power controller (PWR) base address 0x40007000 */
 
 /********************************************************************************************************/
 
@@ -96,16 +98,16 @@ Defining each peripheral base address of ABH1 bus
 
 typedef struct
 {
-	volatile uint32_t MODER;    		//GPIO port mode register   				  //Address offset : 0x00
-	volatile uint32_t OTYPER;			//GPIO port output type register			  //Address offset : 0x04
-	volatile uint32_t OSPEEDR;			//GPIO port output speed register	 		  //Address offset : 0x08
-	volatile uint32_t PUPDR;			//GPIO port pull-up / pull-down register	  //Address offset : 0x0C
-	volatile uint32_t IDR;				//GPIO port input data register			 	  //Address offset : 0x10
-	volatile uint32_t ODR;				//GPIO port output data register 			  //Address offset : 0x14
-	volatile uint32_t BSRR;				//GPIO port bit set/reset register 			  //Address offset : 0x18
-	volatile uint32_t LCKR;				//GPIO port configuration clock register 	  //Address offset : 0x1C
-	volatile uint32_t AFRL;				//GPIO port Alternate function low register   //Address offset : 0x20
-	volatile uint32_t AFRH;				//GPIO port Alternate function high register  //Address offset : 0x24
+	volatile uint32_t MODER;    		/* GPIO port mode register   				  		Address offset : 0x00 */
+	volatile uint32_t OTYPER;			/* GPIO port output type register			  		Address offset : 0x04 */
+	volatile uint32_t OSPEEDR;			/* GPIO port output speed register	 		  		Address offset : 0x08 */
+	volatile uint32_t PUPDR;			/* GPIO port pull-up / pull-down register	  		Address offset : 0x0C */
+	volatile uint32_t IDR;				/* GPIO port input data register			  		Address offset : 0x10 */
+	volatile uint32_t ODR;				/* GPIO port output data register 			  		Address offset : 0x14 */
+	volatile uint32_t BSRR;				/* GPIO port bit set/reset register 		  		Address offset : 0x18 */
+	volatile uint32_t LCKR;				/* GPIO port configuration clock register 	  		Address offset : 0x1C */
+	volatile uint32_t AFRL;				/* GPIO port Alternate function low register  		Address offset : 0x20 */
+	volatile uint32_t AFRH;				/* GPIO port Alternate function high register 		Address offset : 0x24 */
 }GPIO_RegDef_t;
 
 #define GPIOA 		((GPIO_RegDef_t*)GPIOA_BASEADDR)
@@ -157,6 +159,9 @@ typedef struct
 	volatile uint32_t DCKCFGR;
 }RCC_RegDef_t;
 
+/*Define RCC */
+
+#define RCC 	((RCC_RegDef_t*)RCC_BASEADDR)
 
 /* @External interrupt register EXTI*/
 
@@ -170,6 +175,11 @@ typedef struct
 	volatile uint32_t PR;						/*Pending register 							   						Address offset : 0x14*/
 }EXTI_RegDef_t;
 
+/*Define EXTI*/
+
+#define EXTI 	((EXTI_RegDef_t*)EXTI_BASEADDR)
+
+
 /* @SYSCFG Registers */
 typedef struct {
 	volatile uint32_t MEMRMP; 					/*Memory remap register 							   	Address offset : 0x00*/
@@ -180,6 +190,9 @@ typedef struct {
 	volatile uint32_t CMPCR;					/*Compensation cell control register					Address offset : 0x20*/
 }SYSCFG_RegDef_t;
 
+/*Define SYSCFG */
+
+#define SYSCFG 	((SYSCFG_RegDef_t*)SYSCFG_BASEADDR)
 
 /* @SPI Registers*/
 
@@ -196,23 +209,33 @@ typedef struct
 	volatile uint16_t SPI_I2SPR;				/* SPI I2S Pre-scaler Register 							Address offset : 0x20*/
 }SPI_RegDef_t;
 
-/*Define RCC */
-
-#define RCC 	((RCC_RegDef_t*)RCC_BASEADDR)
-
-/*Define EXTI*/
-
-#define EXTI 	((EXTI_RegDef_t*)EXTI_BASEADDR)
-
-/*Define SYSCFG */
-
-#define SYSCFG 	((SYSCFG_RegDef_t*)SYSCFG_BASEADDR)
-
 /* Define SPI*/
 #define SPI1 	((SPI_RegDef_t*)SPI1_BASEADDR)							//SPI_register Configuration for both SPI
 #define SPI4 	((SPI_RegDef_t*)SPI4_BASEADDR)							//SPI_register Configuration for both SPI
 #define SPI2	((SPI_RegDef_t*)SPI2_I2S2_BASEADDR) 					//SPI_register Configuration for both SPI and I2S
 #define SPI3	((SPI_RegDef_t*)SPI3_I2S3_BASEADDR)						//SPI_register Configuration for both SPI and I2S
+
+
+/* @I2C Registers*/
+
+typedef struct
+{
+	volatile uint32_t I2C_CR1;
+	volatile uint32_t I2C_CR2;
+	volatile uint32_t I2C_OAR1;
+	volatile uint32_t I2C_OAR2;
+	volatile uint32_t I2C_DR;
+	volatile uint32_t I2C_SR1;
+	volatile uint32_t I2C_SR2;
+	volatile uint32_t I2C_CCR;
+	volatile uint32_t I2C_TRISE;
+	volatile uint32_t I2C_FLTR;
+}I2C_RegDef_t;
+
+/* Macros for I2C Definition */
+#define I2C1 		((I2C_RegDef_t*)I2C1_BASEADDR)
+#define I2C2 		((I2C_RegDef_t*)I2C2_BASEADDR)
+#define I2C3 		((I2C_RegDef_t*)I2C3_BASEADDR)
 
 //Clock enable macros for GPIOx peripherals
 
@@ -308,6 +331,11 @@ typedef struct
 #define SPI3_RCC_RESET()				do {(RCC -> APB1RSTR |=  (1U << 15)) ; (RCC -> APB1RSTR &= ~(1U << 15)) ; }while(0)
 #define SPI4_RCC_RESET()				do {(RCC -> APB2RSTR |=  (1U << 13)) ; (RCC -> APB2RSTR &= ~(1U << 13)) ; }while(0)
 
+/* Macros to reset I2Cx */
+
+#define I2C1_RCC_RESET()				do{RCC -> APB1RSTR |= (1U << 21) ; (RCC -> APB1RSTR &= ~(1U << 21)) ; }while(0);
+#define I2C2_RCC_RESET()				do{RCC -> APB1RSTR |= (1U << 22) ; (RCC -> APB1RSTR &= ~(1U << 22)) ; }while(0);
+#define I2C3_RCC_RESET()				do{RCC -> APB1RSTR |= (1U << 23) ; (RCC -> APB1RSTR &= ~(1U << 23)) ; }while(0);
 
 //General macros
 
@@ -403,11 +431,16 @@ typedef struct
 #define NVIC_IRQ_PRIO15 	15
 
 
-//GPIO header file
+
+
+//GPIO Driver header file
 #include "STM32_GPIO_driver.h"
 
-//SPI header file
+//SPI Driver header file
 #include "STM32_SPI_driver.h"
+
+//I2C Driver header file
+#include "STM32_I2C_Driver.h"
 
 
 #endif /* INC_STM32_DRIVER_H_ */
