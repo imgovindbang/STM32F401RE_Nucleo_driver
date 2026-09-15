@@ -108,14 +108,14 @@ typedef struct
 	volatile uint32_t LCKR;				/* GPIO port configuration clock register 	  		Address offset : 0x1C */
 	volatile uint32_t AFRL;				/* GPIO port Alternate function low register  		Address offset : 0x20 */
 	volatile uint32_t AFRH;				/* GPIO port Alternate function high register 		Address offset : 0x24 */
-}GPIO_RegDef_t;
+}GPIO_Registers;
 
-#define GPIOA 		((GPIO_RegDef_t*)GPIOA_BASEADDR)
-#define GPIOB 		((GPIO_RegDef_t*)GPIOB_BASEADDR)
-#define GPIOC 		((GPIO_RegDef_t*)GPIOC_BASEADDR)
-#define GPIOD 		((GPIO_RegDef_t*)GPIOD_BASEADDR)
-#define GPIOE 		((GPIO_RegDef_t*)GPIOE_BASEADDR)
-#define GPIOH 		((GPIO_RegDef_t*)GPIOH_BASEADDR)
+#define GPIOA 		((GPIO_Registers*)GPIOA_BASEADDR)
+#define GPIOB 		((GPIO_Registers*)GPIOB_BASEADDR)
+#define GPIOC 		((GPIO_Registers*)GPIOC_BASEADDR)
+#define GPIOD 		((GPIO_Registers*)GPIOD_BASEADDR)
+#define GPIOE 		((GPIO_Registers*)GPIOE_BASEADDR)
+#define GPIOH 		((GPIO_Registers*)GPIOH_BASEADDR)
 
 /* @RCC register */
 
@@ -157,11 +157,11 @@ typedef struct
 	volatile uint32_t PLLI2SCFGR;
 	volatile uint32_t RESERVED14;
 	volatile uint32_t DCKCFGR;
-}RCC_RegDef_t;
+}RCC_Registers;
 
 /*Define RCC */
 
-#define RCC 	((RCC_RegDef_t*)RCC_BASEADDR)
+#define RCC 	((RCC_Registers*)RCC_BASEADDR)
 
 /* @External interrupt register EXTI*/
 
@@ -173,11 +173,11 @@ typedef struct
 	volatile uint32_t FTSR;						/*Falling trigger selection register 							   	Address offset : 0x0C*/
 	volatile uint32_t SWIER;					/*Software interrupt event register 							   	Address offset : 0x10*/
 	volatile uint32_t PR;						/*Pending register 							   						Address offset : 0x14*/
-}EXTI_RegDef_t;
+}EXTI_Registers;
 
 /*Define EXTI*/
 
-#define EXTI 	((EXTI_RegDef_t*)EXTI_BASEADDR)
+#define EXTI 	((EXTI_Registers*)EXTI_BASEADDR)
 
 
 /* @SYSCFG Registers */
@@ -188,11 +188,11 @@ typedef struct {
     volatile uint32_t RESERVED0;   				/* Reserved 											Address offset : 0x18*/
     volatile uint32_t RESERVED1;   				/* Reserved 											Address offset : 0x1C*/
 	volatile uint32_t CMPCR;					/*Compensation cell control register					Address offset : 0x20*/
-}SYSCFG_RegDef_t;
+}SYSCFG_Registers;
 
 /*Define SYSCFG */
 
-#define SYSCFG 	((SYSCFG_RegDef_t*)SYSCFG_BASEADDR)
+#define SYSCFG 	((SYSCFG_Registers*)SYSCFG_BASEADDR)
 
 /* @SPI Registers*/
 
@@ -207,13 +207,13 @@ typedef struct
 	volatile uint16_t SPI_TXCRCR;				/* SPI TX CRC 										 	Address offset : 0x18*/
 	volatile uint16_t SPI_I2SCFGR;				/* SPI I2S Configuration Register 						Address offset : 0x1C*/
 	volatile uint16_t SPI_I2SPR;				/* SPI I2S Pre-scaler Register 							Address offset : 0x20*/
-}SPI_RegDef_t;
+}SPI_Registers;
 
 /* Define SPI*/
-#define SPI1 	((SPI_RegDef_t*)SPI1_BASEADDR)							//SPI_register Configuration for both SPI
-#define SPI4 	((SPI_RegDef_t*)SPI4_BASEADDR)							//SPI_register Configuration for both SPI
-#define SPI2	((SPI_RegDef_t*)SPI2_I2S2_BASEADDR) 					//SPI_register Configuration for both SPI and I2S
-#define SPI3	((SPI_RegDef_t*)SPI3_I2S3_BASEADDR)						//SPI_register Configuration for both SPI and I2S
+#define SPI1 	((SPI_Registers*)SPI1_BASEADDR)							//SPI_register Configuration for both SPI
+#define SPI4 	((SPI_Registers*)SPI4_BASEADDR)							//SPI_register Configuration for both SPI
+#define SPI2	((SPI_Registers*)SPI2_I2S2_BASEADDR) 					//SPI_register Configuration for both SPI and I2S
+#define SPI3	((SPI_Registers*)SPI3_I2S3_BASEADDR)						//SPI_register Configuration for both SPI and I2S
 
 
 /* @I2C Registers*/
@@ -230,12 +230,30 @@ typedef struct
 	volatile uint32_t I2C_CCR;
 	volatile uint32_t I2C_TRISE;
 	volatile uint32_t I2C_FLTR;
-}I2C_RegDef_t;
+}I2C_Registers;
 
 /* Macros for I2C Definition */
-#define I2C1 		((I2C_RegDef_t*)I2C1_BASEADDR)
-#define I2C2 		((I2C_RegDef_t*)I2C2_BASEADDR)
-#define I2C3 		((I2C_RegDef_t*)I2C3_BASEADDR)
+#define I2C1 		((I2C_Registers*)I2C1_BASEADDR)
+#define I2C2 		((I2C_Registers*)I2C2_BASEADDR)
+#define I2C3 		((I2C_Registers*)I2C3_BASEADDR)
+
+/* @USART Registers */
+typedef struct
+{
+	volatile uint32_t USART_SR;
+	volatile uint32_t USART_DR;
+	volatile uint32_t USART_BRR;
+	volatile uint32_t USART_CR1;
+	volatile uint32_t USART_CR2;
+	volatile uint32_t USART_CR3;
+	volatile uint32_t USART_GTPR;
+}USART_Registers;
+
+/* Macros for USART */
+#define USART1   ((USART_Registers*)USART1_BASEADDR)
+#define USART2	 ((USART_Registers*)USART2_BASEADDR)
+#define USART6	 ((USART_Registers*)USART6_BASEADDR)
+
 
 //Clock enable macros for GPIOx peripherals
 
@@ -337,6 +355,12 @@ typedef struct
 #define I2C2_RCC_RESET()				do{RCC -> APB1RSTR |= (1U << 22) ; (RCC -> APB1RSTR &= ~(1U << 22)) ; }while(0);
 #define I2C3_RCC_RESET()				do{RCC -> APB1RSTR |= (1U << 23) ; (RCC -> APB1RSTR &= ~(1U << 23)) ; }while(0);
 
+/* Macros to reset USARTx */
+#define USART1_RCC_RESET()				do{RCC -> APB2RSTR |= (1U << 4) ;  (RCC -> APB2RSTR &= ~(1U << 4)) ; }while(0);
+#define USART2_RCC_RESET()				do{RCC -> APB1RSTR |= (1U << 17);  (RCC -> APB1RSTR &= ~(1U << 17)); }while(0);
+#define USART6_RCC_RESET()				do{RCC -> APB2RSTR |= (1U << 5) ;  (RCC -> APB2RSTR &= ~(1U << 5)) ; }while(0);
+
+
 //General macros
 
 #define ENABLE 			1
@@ -436,11 +460,16 @@ typedef struct
 //GPIO Driver header file
 #include "STM32_GPIO_driver.h"
 
+//RCC Driver Header file
+#include "STM32_RCC_Driver.h"
+
 //SPI Driver header file
 #include "STM32_SPI_driver.h"
 
 //I2C Driver header file
 #include "STM32_I2C_Driver.h"
 
+//USART Driver Header file
+#include "STM32_USART_Driver.h"
 
 #endif /* INC_STM32_DRIVER_H_ */

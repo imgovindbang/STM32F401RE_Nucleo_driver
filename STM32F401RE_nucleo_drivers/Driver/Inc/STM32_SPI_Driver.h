@@ -14,7 +14,7 @@ typedef struct
 	uint8_t SPI_CPOL;
 	uint8_t SPI_SSM;
 	uint8_t SPI_Speed;
-}SPI_Config_t;
+}SPI_Config;
 
 
 typedef struct
@@ -25,46 +25,46 @@ typedef struct
 	uint8_t Rxlen;						/*	< To Store the RxBuffer	Length  >	*/
 	uint8_t TxState;					/*	< To Store the TxBuffer State 	>	*/
 	uint8_t RxState;					/*	< To Store the RxBuffer	State   >	*/
-}SPI_Store_Data_t;
+}SPI_Store_Data;
 
 
 typedef struct
 {
-	SPI_RegDef_t *pSPIx;
-	SPI_Config_t SPI_Config;
-	SPI_Store_Data_t *SPI_Data_Store;
-}SPI_Handle_t;
+	SPI_Registers *pSPIx;
+	SPI_Config SPI_Config;
+	SPI_Store_Data *SPI_Data_Store;
+}SPI_Handle;
 
 
 /* @SPI Device Mode */
 
-typedef enum
+enum
 {
 	SPI_DEVICE_MODE_SLAVE,
 	SPI_DEVICE_MODE_MASTER
-}Device_Mode;
+};
 
 /* @SPI Bus Configuration*/
 
-typedef enum
+enum
 {
 	SPI_FULL_DUPLEX = 1,
 	SPI_HALF_DUPLEX,
 	SPI_SIMPLEX_RXONLY
-}SPI_Bus_config;
+};
 
 /* @SPI DFF (Data frame format)*/
 
-typedef enum
+enum
 {
 	SPI_DFF_8BIT,
 	SPI_DFF_16BIT
-}SPI_DFF;
+};
 
 
 /* @SPI SPEED*/
 
-typedef enum
+enum
 {
 	SPI_SPEED_DIV2,
 	SPI_SPEED_DIV4,
@@ -74,39 +74,39 @@ typedef enum
 	SPI_SPEED_DIV64,
 	SPI_SPEED_DIV128,
 	SPI_SPEED_DIV256,
-}SPI_Speed;
+};
 
 /*	@SPI Clock phase (CPHA)*/
 
-typedef enum
+enum
 {
 	SPI_CPHA_LOW,
 	SPI_CPHA_HIGH
-}SPI_CPHA;
+};
 
 
 /* @SPI CPOL (CLock Polarity) */
 
-typedef enum
+enum
 {
 	SPI_CPOL_LOW,
 	SPI_CPOL_HIGH
-}SPI_CPOL;
+};
 
 /* @SPI SSM (Software slave management) */
 
-typedef enum
+enum
 {
 	SPI_SSM_DI,
 	SPI_SSM_EN
-}SPI_SSM;
+};
 
 
 /*****************************************************************************************************************************************************************************************
 * 	 	 	 	 	 	 	 	 	 	SPI CR1 (Control Register 1) macros 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 *
 ******************************************************************************************************************************************************************************************/
 
-typedef enum
+enum
 {
 	SPI_CR1_CPHA,
 	SPI_CR1_CPOL,
@@ -122,7 +122,7 @@ typedef enum
 	SPI_CR1_CRCEN,
 	SPI_CR1_BIDIOE,
 	SPI_CR1_BIDIMODE,
-}SPI_CR1_Bits;
+};
 
 
 
@@ -131,7 +131,7 @@ typedef enum
 * 	 	 	 	 	 	 	 	 	 	SPI CR2 (Control Register 2) macros 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 *
 ******************************************************************************************************************************************************************************************/
 
-typedef enum
+enum
 {
 	SPI_CR2_RXDMAEN,
 	SPI_CR2_TXDMAEN,
@@ -141,7 +141,7 @@ typedef enum
 	SPI_CR2_ERRIE,
 	SPI_CR2_RXNEIE,
 	SPI_CR2_TXEIE
-}SPI_CR2_Bits;
+};
 
 
 
@@ -150,7 +150,7 @@ typedef enum
 * 	 	 	 	 	 	 	 	 	 	SPI SR (SPI status Register) macros 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 	 *
 ******************************************************************************************************************************************************************************************/
 
-typedef enum
+enum
 {
 	SPI_SR_RXNE,
 	SPI_SR_TXE,
@@ -161,7 +161,7 @@ typedef enum
 	SPI_SR_OVR,
 	SPI_SR_BSY,
 	SPI_SR_FRE
-}SPI_SR_Bits;
+};
 
 
 
@@ -191,13 +191,13 @@ typedef enum
 
 /* @SPI Application Possible Events */
 
-typedef enum
+enum
 {
 	SPI_EVENT_TX_COMP = 1,
 	SPI_EVENT_RX_COMP,
 	SPI_EVENT_OVR_ERR,
 	SPI_EVENT_CRC_ERR
-}SPI_Appl_Event;
+};
 
 
 
@@ -210,41 +210,41 @@ typedef enum
 
 /* SPI peripheral clock enable */
 
-void SPI_PClkControl(SPI_RegDef_t *pSPIx, uint8_t ENorDI);
+void SPI_PClkControl(SPI_Registers *pSPIx, uint8_t ENorDI);
 
 /* SPI Initialization and De-initialization*/
 
-void SPI_Init(SPI_Handle_t *pSPIHandle);
-void SPI_DeInit(SPI_RegDef_t *pSPIx);
+void SPI_Init(SPI_Handle *pSPIHandle);
+void SPI_DeInit(SPI_Registers *pSPIx);
 
 /* Data send and Received */
 
-void SPI_Data_Send(SPI_RegDef_t *pSPIx, uint8_t *TxBuffer  ,uint32_t Size);
+void SPI_Data_Send(SPI_Registers *pSPIx, uint8_t *TxBuffer  ,uint32_t Size);
 
-void SPI_Data_Received(SPI_RegDef_t *pSPIx, uint8_t *RxBuffer  ,uint32_t Size);
+void SPI_Data_Received(SPI_Registers *pSPIx, uint8_t *RxBuffer  ,uint32_t Size);
 
 /* Data Send and Received in Interrupt */
 
-uint8_t SPI_Data_SendIntr(SPI_Handle_t *SPI_Handle ,uint8_t *TxBuffer  ,uint32_t Size);
+uint8_t SPI_Data_SendIntr(SPI_Handle *pSPI_Handle ,uint8_t *TxBuffer  ,uint32_t Size);
 
-uint8_t SPI_Data_ReceivedIntr(SPI_Handle_t *SPI_Handle, uint8_t *RxBuffer  ,uint32_t Size);
+uint8_t SPI_Data_ReceivedIntr(SPI_Handle *SPI_Handle, uint8_t *RxBuffer  ,uint32_t Size);
 
 /* SPI Interrupt Handle	*/
 
 void SPI_IRQIntr_Config(uint16_t IRQnumber, uint8_t ENorDI);
 void SPI_IRQPerio_Config(uint16_t IRQnumber,uint32_t IRQpriority);
-void SPI_IRQHandle(SPI_Handle_t *pHandle);
+void SPI_IRQHandle(SPI_Handle *pHandle);
 
-void SPI_PeriContr(SPI_RegDef_t *pSPIx, uint8_t ENorDI);
-void SPI_SSIEn(SPI_RegDef_t *pSPIx, uint8_t ENorDI);
-
-
-void SPI_Clr_OVRF(SPI_RegDef_t *pSPIx);
-void SPI_Close_Transmit(SPI_Handle_t *pHandle);
-void SPI_Close_reception(SPI_Handle_t *pHandle);
+void SPI_PeriContr(SPI_Registers *pSPIx, uint8_t ENorDI);
+void SPI_SSIEn(SPI_Registers *pSPIx, uint8_t ENorDI);
 
 
-void SPI_Appli_Event_CB(SPI_Handle_t *SPI_Handle, uint8_t SPI_EVENT_RX_COMP);
+void SPI_Clr_OVRF(SPI_Registers *pSPIx);
+void SPI_Close_Transmit(SPI_Handle *pHandle);
+void SPI_Close_reception(SPI_Handle *pHandle);
+
+
+void SPI_Appli_Event_CB(SPI_Handle *pSPI_Handle, uint8_t SPI_EVENT_RX_COMP);
 
 
 #endif /* STM32_SPI_DRIVER_H_ */

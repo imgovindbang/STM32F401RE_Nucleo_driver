@@ -5,8 +5,32 @@
 
 #include "STM32_driver.h"
 
+/* I2C Application Status */
+
+#define I2C_READY		0
+#define I2C_BUSY_IN_RX	1
+#define I2C_BUSY_IN_TX	2
+
+#define I2C_DISABLE_SR  0
+#define I2C_ENABLE_SR   1
+
+enum
+{
+	I2C_EVENT_STOP,
+	I2C_EVENT_RX_COMP,
+	I2C_EVENT_TX_COMP,
+	I2C_ERROR_BERR,
+	I2C_ERROR_ARLO,
+	I2C_ERROR_AF,
+	I2C_ERROR_OVR,
+	I2C_ERROR_TIMEOUT,
+	I2C_EVENT_DATA_REQ,
+	I2C_EVENT_DATA_REC
+};
+
+
 /* @I2C Control Register 1 (I2C_CR1)*/
-typedef enum
+enum
 {
 	CR1_PE,
 	CR1_SMBUS,
@@ -24,11 +48,11 @@ typedef enum
 	CR1_ALERT,
 	CR1_RESERVED2,
 	CR1_SWRST
-}I2C_CR1;
+};
 
 
 /* @I2C Control Register 2 (I2C_CR2)*/
-typedef enum
+enum
 {
 	CR2_FREQ,
 	CR2_RESERVED1 = 6,
@@ -38,11 +62,11 @@ typedef enum
 	CR2_DMAEN,
 	CR2_LAST,
 	CR2_RESERVED2,
-}I2C_CR2;
+};
 
 /* @I2C Status Register 1 I2S_SR1*/
 
-typedef enum
+enum
 {
 	SR1_SB,
 	SR1_ADDR,
@@ -60,11 +84,10 @@ typedef enum
 	SR1_RESERVED2,
 	SR1_TIMEOUT,
 	SR1_SMBALERT
-}I2C_SR1;
+};
 
 /* @I2C Status Register 2 I2S_SR2 */
-
-typedef enum
+enum
 {
 	SR2_MSL,
 	SR2_BUSY,
@@ -75,7 +98,7 @@ typedef enum
 	SR2_SMB_HOST,
 	SR2_DUALF,
 	SR2_PEC
-}I2C_SR2;
+};
 
 
 
@@ -94,16 +117,29 @@ typedef struct
 	volatile uint32_t I2C_DeviceAddr;
 	volatile uint32_t I2C_ACK;
 	volatile uint32_t I2C_FMDutyCycle;
-}I2C_Config_t;
+}I2C_Config;
 
+/* I2C Interrupt helping to store data */
+typedef struct
+{
+	uint8_t *pTxBuffer;
+	uint8_t *pRxBuffer;
+	uint32_t TxLen;
+	uint32_t RxLen;
+	uint8_t  Tx_Rx_State;
+	uint8_t  Device_Address;
+	uint32_t RxSize;
+	uint8_t  sr;
+}I2C_StoreData;
 
 /* @I2C Handle Structure */
 
 typedef struct
 {
-	I2C_RegDef_t *pI2C;
-	I2C_Config_t I2C_Handle;
-}I2C_Handle_t;
+	I2C_Registers *pI2C;
+	I2C_Config I2C_Handle;
+	I2C_StoreData I2C_DataStore;
+}I2C_Handle;
 
 
 /* @I2C_SCLSpeed Macros*/
@@ -124,41 +160,66 @@ typedef struct
 
 /****************************************************************************************************************************************************************/
 
-/*								I2C (Serial peripheral interface) API implementation																																*/
+/*								I2C API implementation																																*/
 
 /****************************************************************************************************************************************************************/
 
 
 /* I2C peripheral clock enable */
 
-void I2C_PClkControl(I2C_RegDef_t *pI2Cx, uint8_t ENorDI);
+void I2C_PClkControl(I2C_Registers *pI2Cx, uint8_t ENorDI);
 
 /* I2C Initialization and De-initialization*/
 
-void I2C_Init(I2C_Handle_t *pI2CHandle);
-void I2C_DeInit(I2C_RegDef_t *pI2C);
+void I2C_Init(I2C_Handle *pI2CHandle);
+void I2C_DeInit(I2C_Registers *pI2C);
 
 /* I2C send and received data*/
 
-void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *TxBuffer , uint32_t Len, uint8_t AdSlaveAddressdr);
+void I2C_MasterSendData(I2C_Handle *pI2CHandle, uint8_t *TxBuffer , uint32_t Len, uint8_t SlaveAddress, uint8_t sr);
+
+void I2C_MasterReciveData(I2C_Handle *pI2CHandle, uint8_t *RxBuffer , uint32_t Len, uint8_t SlaveAddress, uint8_t sr);
+
+void I2C_StopDataSent(I2C_Handle *pI2CHandle);
+void I2C_StopReceiveData(I2C_Handle *pI2CHandle);
 
 
 // I2C Flag status
-uint8_t I2C_GetFlagStatus(I2C_RegDef_t *pI2C, uint32_t FlagName);
-/* I2C Interrupt Handle	*/
+uint8_t I2C_GetFlagStatus(I2C_Registers *pI2C, uint32_t FlagName);
 
+/* I2C Interrupt Handle	*/
 void I2C_IRQIntr_Config(uint16_t IRQnumber, uint8_t ENorDI);
 void I2C_IRQPerio_Config(uint16_t IRQnumber,uint32_t IRQpriority);
+void I2C_EV_IRQHandling(I2C_Handle *pI2CHandle);
+void I2C_ER_IRQHandling(I2C_Handle *pI2CHandle);
 
 
-void I2C_PeriContr(I2C_RegDef_t *pI2Cx, uint8_t ENorDI);
-void I2C_SSIEn(I2C_RegDef_t *pI2Cx, uint8_t ENorDI);
+void I2C_PeriContr(I2C_Registers *pI2Cx, uint8_t ENorDI);
+void I2C_SSIEn(I2C_Registers *pI2Cx, uint8_t ENorDI);
 
 
 
-void I2C_Appli_Event_CB(I2C_Handle_t *I2C_Handle, uint8_t I2C_EVENT_RX_COMP);
+void I2C_Appli_Event_CB(I2C_Handle *I2C_Handle, uint8_t I2C_EVENT_RX_COMP);
 
 
+/****************************************************************************************************************************************************************/
+
+/*								I2C API implementation for Interrupt handling																															*/
+
+/******************sa**********************************************************************************************************************************************/
+
+uint8_t I2C_MasterSendData_INT(I2C_Handle *pI2CHandle, uint8_t *TxBuffer , uint32_t Len, uint8_t SlaveAddress, uint8_t sr);
+
+uint8_t I2C_ReceiveSendData_INT(I2C_Handle *pI2CHandle, uint8_t *RxBuffer , uint32_t Len, uint8_t SlaveAddress, uint8_t sr);
+
+
+/****************************************************************************************************************************************************************/
+
+/*								I2C API implementation for Slave working																															*/
+
+/****************************************************************************************************************************************************************/
+void I2C_SlaveSendData(I2C_Registers *pI2Cx, uint8_t data);
+uint8_t I2C_SlaveReceiveData(I2C_Registers *pI2Cx);
 
 
 

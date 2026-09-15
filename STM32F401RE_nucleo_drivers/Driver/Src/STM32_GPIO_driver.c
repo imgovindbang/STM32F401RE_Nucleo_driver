@@ -8,7 +8,7 @@
 
 
 //GPIO enable and disable control clock for peripherals
-void GPIO_PClkControl(GPIO_RegDef_t *pGPIOx, uint8_t ENorDI)
+void GPIO_PeriClockControl(GPIO_Registers *pGPIOx, uint8_t ENorDI)
 {
 	if(ENorDI == ENABLE){
 		if(pGPIOx == GPIOA){
@@ -46,23 +46,7 @@ void GPIO_PClkControl(GPIO_RegDef_t *pGPIOx, uint8_t ENorDI)
 //GPIO Initialization and Deinitialization
 
 
-/*
-@fn							- GPIO_Init
-
-@brief 						- This function is to GPIO Initialization
-
-
-@param[in]				   - base address of GPIOx
-@param[in]
-@param[in] 				   -
-
-@return                    - none
-
-@Note                      - none
-*/
-
-
-void GPIO_Init(GPIO_Handle_t *pGPIO_Handle)
+void GPIO_Init(GPIO_Handle *pGPIO_Handle)
 {
 	uint32_t temp = 0;
 
@@ -148,23 +132,8 @@ void GPIO_Init(GPIO_Handle_t *pGPIO_Handle)
 }
 
 
-/*
-@fn							- GPIO_DeInit
 
-@brief 						- This function is to GPIO Deinitialization
-
-
-@param[in]				   - base address of GPIOx
-@param[in]
-@param[in] 				   -
-
-@return                    - none
-
-@Note                      - none
-*/
-
-
-void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
+void GPIO_DeInit(GPIO_Registers *pGPIOx)
 {
 	if(pGPIOx == GPIOA){
 		GPIOA_RCC_RESET();
@@ -185,35 +154,21 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 
 //Read/Write from GPIO
 
-/*
-@fn							- GPIO_PinRead
-
-@brief 						- To take a input of pin
-
-
-@param[in]				   - base address of GPIOx
-@param[in]			       - Pin number
-@param[in] 				   -
-
-@return                    - 0 or 1
-
-@Note                      - None
-*/
-
-uint8_t GPIO_PinRead(GPIO_RegDef_t *pGPIOx, uint8_t Pin_Number)
+uint8_t GPIO_PinRead(GPIO_Registers *pGPIOx, uint8_t Pin_Number)
 {
 	 uint8_t value;
 	 value = (uint8_t)((pGPIOx->IDR >> Pin_Number)  & 0x00000001);
 	 return value;
 }
 
-uint16_t GPIO_PortRead(GPIO_RegDef_t *pGPIOx)
+uint16_t GPIO_PortRead(GPIO_Registers *pGPIOx)
 {
 	uint16_t value;
 	value = (uint16_t)pGPIOx->IDR ;
 	return value;
 }
-void GPIO_PinWrite(GPIO_RegDef_t *pGPIOx, uint8_t Pin_Number, uint8_t Value)
+
+void GPIO_PinWrite(GPIO_Registers *pGPIOx, uint8_t Pin_Number, uint8_t Value)
 {
 	if(Value == GPIO_SET)
 	{
@@ -225,11 +180,13 @@ void GPIO_PinWrite(GPIO_RegDef_t *pGPIOx, uint8_t Pin_Number, uint8_t Value)
 		pGPIOx -> ODR &= ~(1 << Pin_Number);
 	}
 }
-void GPIO_PortWrite(GPIO_RegDef_t *pGPIOx, uint16_t Value)
+
+void GPIO_PortWrite(GPIO_Registers *pGPIOx, uint16_t Value)
 {
 	pGPIOx -> ODR = Value;
 }
-void GPIO_TogglePin(GPIO_RegDef_t *pGPIOx, uint8_t Pin_Number)
+
+void GPIO_TogglePin(GPIO_Registers *pGPIOx, uint8_t Pin_Number)
 {
 	pGPIOx -> ODR ^= (1 << Pin_Number);
 }
