@@ -2,38 +2,36 @@
 
 /* SPI peripheral clock enable */
 
-void SPI_PClkControl(SPI_Registers *pSPIx, uint8_t ENorDI)
+void SPI_Peri_Clk_Enable(SPI_Registers *pSPIx)
 {
-	if(ENorDI == ENABLE)
+	if(pSPIx == SPI1)
 	{
-		if(pSPIx == SPI1)
-		{
-			SPI1_PCLK_EN();
-		}else if(pSPIx == SPI2)
-		{
-			SPI2_PCLK_EN();
-		}else if(pSPIx == SPI3)
-		{
-			SPI3_PCLK_EN();
-		}else if (pSPIx == SPI4)
-		{
-			SPI4_PCLK_EN();
-		}
-	}else
+		SPI1_PCLK_EN();
+	}else if(pSPIx == SPI2)
 	{
-		if(pSPIx == SPI1)
-		{
-			SPI1_PCLK_DI();
-		}else if(pSPIx == SPI2)
-		{
-			SPI2_PCLK_DI();
-		}else if(pSPIx == SPI3)
-		{
-			SPI3_PCLK_DI();
-		}else if (pSPIx == SPI4)
-		{
-			SPI4_PCLK_DI();
-		}
+		SPI2_PCLK_EN();
+	}else if(pSPIx == SPI3)
+	{
+		SPI3_PCLK_EN();
+	}else if (pSPIx == SPI4)
+	{
+		SPI4_PCLK_EN();
+	}
+}
+
+void SPI_Peri_Clk_Disable(SPI_Registers *pSPIx){
+	if(pSPIx == SPI1)
+	{
+		SPI1_PCLK_DI();
+	}else if(pSPIx == SPI2)
+	{
+		SPI2_PCLK_DI();
+	}else if(pSPIx == SPI3)
+	{
+		SPI3_PCLK_DI();
+	}else if (pSPIx == SPI4)
+	{
+		SPI4_PCLK_DI();
 	}
 }
 
@@ -44,7 +42,7 @@ void SPI_Init(SPI_Handle *pSPIHandle)
 	uint32_t temp = 0;
 
 	//Enable SPI Clock
-	SPI_PClkControl(pSPIHandle -> pSPIx, ENABLE);
+	SPI_Peri_Clk_Enable(pSPIHandle -> pSPIx);
 
 	//Configure Device mode
 
@@ -158,32 +156,30 @@ void SPI_Data_Send(SPI_Registers *pSPIx, uint8_t *TxBuffer  ,uint32_t Size)
 
 /* @SPI Enable and disable function */
 
-void SPI_PeriContr(SPI_Registers *pSPIx, uint8_t ENorDI)
+void SPI_Enable(SPI_Registers *pSPIx)
 {
-	if(ENorDI == ENABLE)
-	{
-		//Enabling SPI by Set the SPE bit
-		pSPIx -> SPI_CR1 |= (1 << SPI_CR1_SPE);
-	}else
-	{
-		//Disabling SPI by Clear the SPE bit
-		pSPIx -> SPI_CR1 &= ~(1 << SPI_CR1_SPE);
-	}
+	//Enabling SPI by Set the SPE bit
+	pSPIx -> SPI_CR1 |= (1 << SPI_CR1_SPE);
+}
+
+void SPI_Disable(SPI_Registers *pSPIx)
+{
+	//Disabling SPI by Clear the SPE bit
+	pSPIx -> SPI_CR1 &= ~(1 << SPI_CR1_SPE);
 }
 
 
 /* @SPI SSI Enable*/
 //Its an Internal slave select pin which need to be high to avoid MODF: Mode fault which leads to fail in Master mode and make it to slave
 
-void SPI_SSIEn(SPI_Registers *pSPIx, uint8_t ENorDI)
+void SPI_SSI_Enable(SPI_Registers *pSPIx)
 {
-	if(ENorDI == ENABLE)
-	{
 		pSPIx ->SPI_CR1 |= (1 << SPI_CR1_SSI);
-	}else
-	{
-		pSPIx ->SPI_CR1 &= ~(1 << SPI_CR1_SSI);
-	}
+}
+
+void SPI_SSI_Disable(SPI_Registers *pSPIx)
+{
+	pSPIx ->SPI_CR1 &= ~(1 << SPI_CR1_SSI);
 }
 
 /* @SPI Data Received*/
@@ -215,50 +211,46 @@ void SPI_Data_Received(SPI_Registers *pSPIx, uint8_t *RxBuffer  ,uint32_t Size)
 
 /* SPI Interrupt Handle	*/
 //check later for correction
-void SPI_IRQIntr_Config(uint16_t IRQnumber, uint8_t ENorDI)
+void SPI_IRQIntr_Enable(uint16_t IRQnumber)
 {
-	if(ENorDI == ENABLE)
+	if(IRQnumber == IRQ_NO_SPI1)
 	{
-		if(IRQnumber == IRQ_NO_SPI1)
-		{
-			//Set ISER0(Interrupt Set-enable Registers)
-			*NVIC_ISER0 = (1U << IRQnumber % 32);
-		}else if(IRQnumber == IRQ_NO_SPI2)
-		{
-			//Set ISER1(Interrupt Set-enable Registers)
-			*NVIC_ISER1 = (1U << IRQnumber % 32);
-		}else if(IRQnumber == IRQ_NO_SPI3)
-		{
-			//Set ISER2(Interrupt Set-enable Registers)
-			*NVIC_ISER2 = (1U << IRQnumber % 32);
-		}else if(IRQnumber == IRQ_NO_SPI4)
-		{
-			//Set ISER(Interrupt Set-enable Registers)
-			*NVIC_ISER3 = (1U << IRQnumber % 32);
-		}
-	}
-	else
+		//Set ISER0(Interrupt Set-enable Registers)
+		*NVIC_ISER0 = (1U << IRQnumber % 32);
+	}else if(IRQnumber == IRQ_NO_SPI2)
 	{
-		if(IRQnumber == IRQ_NO_SPI1)
-		{
-			//Clear ICER0 (Interrupt Set-enable Registers)
-			*NVIC_ICER0 |= (1U << IRQnumber % 32);
-		}else if(IRQnumber == IRQ_NO_SPI2)
-		{
-			//Clear ICER1 (Interrupt Set-enable Registers)
-			*NVIC_ICER0 |= (1U << IRQnumber % 32);
-		}else if(IRQnumber == IRQ_NO_SPI3)
-		{
-			//Clear ICER2 (Interrupt Set-enable Registers)
-			*NVIC_ICER2 |= (1U << IRQnumber % 32);
-		}else if(IRQnumber == IRQ_NO_SPI4)
-		{
-			//Clear ICER3 (Interrupt Set-enable Registers)
-			*NVIC_ICER3 |= (1U << IRQnumber % 32);
-		}
+		//Set ISER1(Interrupt Set-enable Registers)
+		*NVIC_ISER1 = (1U << IRQnumber % 32);
+	}else if(IRQnumber == IRQ_NO_SPI3)
+	{
+		//Set ISER2(Interrupt Set-enable Registers)
+		*NVIC_ISER2 = (1U << IRQnumber % 32);
+	}else if(IRQnumber == IRQ_NO_SPI4)
+	{
+		//Set ISER(Interrupt Set-enable Registers)
+		*NVIC_ISER3 = (1U << IRQnumber % 32);
 	}
 }
 
+void SPI_IRQIntr_Disable(uint16_t IRQnumber){
+	if(IRQnumber == IRQ_NO_SPI1)
+	{
+		//Clear ICER0 (Interrupt Set-enable Registers)
+		*NVIC_ICER0 |= (1U << IRQnumber % 32);
+	}else if(IRQnumber == IRQ_NO_SPI2)
+	{
+		//Clear ICER1 (Interrupt Set-enable Registers)
+		*NVIC_ICER0 |= (1U << IRQnumber % 32);
+	}else if(IRQnumber == IRQ_NO_SPI3)
+	{
+		//Clear ICER2 (Interrupt Set-enable Registers)
+		*NVIC_ICER2 |= (1U << IRQnumber % 32);
+	}else if(IRQnumber == IRQ_NO_SPI4)
+	{
+		//Clear ICER3 (Interrupt Set-enable Registers)
+		*NVIC_ICER3 |= (1U << IRQnumber % 32);
+	}
+}
 
 
 static void SPI_IntrHandle_TXE(SPI_Handle *pSPI_Handle)

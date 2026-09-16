@@ -133,7 +133,8 @@ enum
 
 
 //GPIO enable and disable control clock for peripherals
-void GPIO_PeriClockControl(GPIO_Registers *pGPIOx, uint8_t ENorDI);
+void GPIO_Peri_Clk_Enable(GPIO_Registers *pGPIOx);
+void GPIO_Peri_Clk_Disable(GPIO_Registers *pGPIOx);
 
 //GPIO Initialization and Deinitialization
 

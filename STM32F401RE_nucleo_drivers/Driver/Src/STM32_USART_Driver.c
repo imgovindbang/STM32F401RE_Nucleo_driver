@@ -179,23 +179,23 @@ void ClearOREFlag(USART_Handle *pHandle)
 	(void)dummyread;
 }
 
-void USART_PClkControl(USART_Registers *pUSART, uint8_t ENorDI)
+void USART_Peri_Clk_Enable(USART_Registers *pUSART)
 {
-	if(ENorDI == ENABLE)
+	if(pUSART == USART1)
 	{
-		if(pUSART == USART1)
-		{
-			USART1_PCLK_EN();
-		}else if(pUSART == USART2)
-		{
-			USART2_PCLK_EN();
-		}else if(pUSART == USART6)
-		{
-			USART6_PCLK_EN();
-		}
-	}else
+		USART1_PCLK_EN();
+	}else if(pUSART == USART2)
 	{
-		if(pUSART == USART1)
+		USART2_PCLK_EN();
+	}else if(pUSART == USART6)
+	{
+		USART6_PCLK_EN();
+	}
+}
+
+void USART_Peri_Clk_Disable(USART_Registers *pUSART)
+{
+	if(pUSART == USART1)
 		{
 			USART1_PCLK_DI();
 		}else if(pUSART == USART2)
@@ -205,7 +205,6 @@ void USART_PClkControl(USART_Registers *pUSART, uint8_t ENorDI)
 		{
 			USART6_PCLK_DI();
 		}
-	}
 }
 
 //USART Initialization API
@@ -214,7 +213,7 @@ void USART_Init(USART_Handle *pHandle)
 	uint8_t temp = 0;
 
 	//Enable the USART peripheral clock
-	USART_PClkControl(pHandle -> pUSART, ENABLE);
+	USART_Peri_Clk_Enable(pHandle -> pUSART);
 
 	//Configuring CR1 Register
 
@@ -488,10 +487,8 @@ void USART_BaudRate(USART_Registers *pUSART, uint32_t Baudrate)
 }
 
 //IRQ Configuration and ISR handling
-void USART_IRQInterruptConfig(uint8_t IRQNumber, uint8_t ENorDI)
+void USART_IRQInterrupt_Enable(uint8_t IRQNumber)
 {
-	if(ENorDI == ENABLE)
-	{
 		if(IRQNumber < 32)
 		{
 			//Set ISER0(Interrupt Set-enable Registers)
@@ -505,22 +502,24 @@ void USART_IRQInterruptConfig(uint8_t IRQNumber, uint8_t ENorDI)
 			//Set ISER2(Interrupt Set-enable Registers)
 			*NVIC_ISER2 |= (1U << IRQNumber % 32);
 		}
-	}else{
-		if(IRQNumber < 32)
-			{
-				//Clear ICER0(Interrupt Clear-enable Registers)
-				*NVIC_ICER0 |= (1U << IRQNumber);
-			}else  if(IRQNumber >= 32 && IRQNumber < 64)
-			{
-				//Clear ICER1(Interrupt Clear-enable Registers)
-				*NVIC_ICER1 |= (1U << IRQNumber % 32);
-			}else if(IRQNumber >= 64 && IRQNumber < 96)
-			{
-				//Clear ICER2(Interrupt Clear-enable Registers)
-				*NVIC_ICER2 |= (1U << IRQNumber % 32);
-			}
-	}
 }
+
+void USART_IRQInterrupt_Disable(uint8_t IRQNumber){
+	if(IRQNumber < 32)
+		{
+			//Clear ICER0(Interrupt Clear-enable Registers)
+			*NVIC_ICER0 |= (1U << IRQNumber);
+		}else  if(IRQNumber >= 32 && IRQNumber < 64)
+		{
+			//Clear ICER1(Interrupt Clear-enable Registers)
+			*NVIC_ICER1 |= (1U << IRQNumber % 32);
+		}else if(IRQNumber >= 64 && IRQNumber < 96)
+		{
+			//Clear ICER2(Interrupt Clear-enable Registers)
+			*NVIC_ICER2 |= (1U << IRQNumber % 32);
+		}
+}
+
 void USART_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
 {
 	uint8_t prix = IRQPriority / 4;
@@ -528,6 +527,9 @@ void USART_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority)
 	uint8_t shift = (8 * prix_section) + (8 - 4);
 	*(NVIC_PR_BASE_ADDR + prix ) |=  IRQPriority << shift;
 }
+
+
+
 void USART_IRQHandling(USART_Handle *pHandle)
 {
 	uint32_t temp1, temp2, temp3;
@@ -667,16 +669,16 @@ void USART_IRQHandling(USART_Handle *pHandle)
 
 
 //Supporting APIs to control peripheral
-void USART_PeripheralControl(USART_Registers *pUSART, uint8_t EnOrDi)
+void USART_Enable(USART_Registers *pUSART)
 {
-	if(EnOrDi)
-	{
-		pUSART -> USART_CR1 |= (1 << USART_CR1_UE);
-	}else
-	{
-		pUSART -> USART_CR1 &= ~(1 << USART_CR1_UE);
-	}
+	pUSART -> USART_CR1 |= (1 << USART_CR1_UE);
 }
+
+void USART_Disable(USART_Registers *pUSART)
+{
+	pUSART -> USART_CR1 &= ~(1 << USART_CR1_UE);
+}
+
 uint8_t USART_GetFlagStatus(USART_Registers *pUSART , uint32_t FlagName)
 {
 	if(pUSART -> USART_SR &  FlagName)

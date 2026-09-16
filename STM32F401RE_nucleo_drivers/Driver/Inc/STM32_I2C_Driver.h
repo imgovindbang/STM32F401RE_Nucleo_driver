@@ -65,7 +65,6 @@ enum
 };
 
 /* @I2C Status Register 1 I2S_SR1*/
-
 enum
 {
 	SR1_SB,
@@ -167,7 +166,8 @@ typedef struct
 
 /* I2C peripheral clock enable */
 
-void I2C_PClkControl(I2C_Registers *pI2Cx, uint8_t ENorDI);
+void I2C_Peri_Clk_Enable(I2C_Registers *pI2Cx);
+void I2C_Peri_Clk_Disable(I2C_Registers *pI2Cx);
 
 /* I2C Initialization and De-initialization*/
 
@@ -188,14 +188,15 @@ void I2C_StopReceiveData(I2C_Handle *pI2CHandle);
 uint8_t I2C_GetFlagStatus(I2C_Registers *pI2C, uint32_t FlagName);
 
 /* I2C Interrupt Handle	*/
-void I2C_IRQIntr_Config(uint16_t IRQnumber, uint8_t ENorDI);
+void I2C_IRQIntr_Enable(uint16_t IRQnumber);
+void I2C_IRQIntr_Disable(uint16_t IRQnumber);
 void I2C_IRQPerio_Config(uint16_t IRQnumber,uint32_t IRQpriority);
 void I2C_EV_IRQHandling(I2C_Handle *pI2CHandle);
 void I2C_ER_IRQHandling(I2C_Handle *pI2CHandle);
 
+void I2C_Enable(I2C_Registers *pI2C);
+void I2C_Disable(I2C_Registers *pI2C);
 
-void I2C_PeriContr(I2C_Registers *pI2Cx, uint8_t ENorDI);
-void I2C_SSIEn(I2C_Registers *pI2Cx, uint8_t ENorDI);
 
 
 

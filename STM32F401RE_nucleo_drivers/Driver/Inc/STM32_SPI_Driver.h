@@ -210,7 +210,8 @@ enum
 
 /* SPI peripheral clock enable */
 
-void SPI_PClkControl(SPI_Registers *pSPIx, uint8_t ENorDI);
+void SPI_Peri_Clk_Enable(SPI_Registers *pSPIx);
+void SPI_Peri_Clk_Disable(SPI_Registers *pSPIx);
 
 /* SPI Initialization and De-initialization*/
 
@@ -231,12 +232,15 @@ uint8_t SPI_Data_ReceivedIntr(SPI_Handle *SPI_Handle, uint8_t *RxBuffer  ,uint32
 
 /* SPI Interrupt Handle	*/
 
-void SPI_IRQIntr_Config(uint16_t IRQnumber, uint8_t ENorDI);
+void SPI_IRQIntr_Enable(uint16_t IRQnumber);
+void SPI_IRQIntr_Disable(uint16_t IRQnumber);
 void SPI_IRQPerio_Config(uint16_t IRQnumber,uint32_t IRQpriority);
 void SPI_IRQHandle(SPI_Handle *pHandle);
 
-void SPI_PeriContr(SPI_Registers *pSPIx, uint8_t ENorDI);
-void SPI_SSIEn(SPI_Registers *pSPIx, uint8_t ENorDI);
+void SPI_Enable(SPI_Registers *pSPIx);
+void SPI_Disable(SPI_Registers *pSPIx);
+void SPI_SSI_Enable(SPI_Registers *pSPIx);
+void SPI_SSI_Disable(SPI_Registers *pSPIx);
 
 
 void SPI_Clr_OVRF(SPI_Registers *pSPIx);

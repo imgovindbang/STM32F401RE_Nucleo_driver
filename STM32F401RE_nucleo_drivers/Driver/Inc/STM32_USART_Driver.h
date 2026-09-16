@@ -177,7 +177,8 @@ enum
 /****************************************************************************************************************************************************************/
 
 //API for Peripheral clock enable for USART
-void USART_PClkControl(USART_Registers *pUSART, uint8_t ENorDI);
+void USART_Peri_Clk_Enable(USART_Registers *pUSART);
+void USART_Peri_Clk_Disable(USART_Registers *pUSART);
 
 //USART Initialization API
 void USART_Init(USART_Handle *pHandle);
@@ -197,13 +198,15 @@ uint8_t USART_ReceiveDataIT(USART_Handle *pHandle, uint8_t *pRxBuffer, uint32_t 
 
 
 //IRQ Configuration and ISR handling
-void USART_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
+void USART_IRQInterrupt_Enable(uint8_t IRQNumber);
+void USART_IRQInterrupt_Disable(uint8_t IRQNumber);
 void USART_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 void USART_IRQHandling(USART_Handle *pHandle);
 
 
 //Supporting APIs to control peripheral
-void USART_PeripheralControl(USART_Registers *pUSART, uint8_t EnOrDi);
+void USART_Enable(USART_Registers *pUSART);
+void USART_Disable(USART_Registers *pUSART);
 uint8_t USART_GetFlagStatus(USART_Registers *pUSART , uint32_t FlagName);
 void USART_ClearFlag(USART_Registers *pUSART, uint16_t StatusFlagName);
 
